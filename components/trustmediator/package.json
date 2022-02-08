@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "express": "^4.17.2",
+    "jose": "^4.5.0",
+    "pem": "^1.14.6",
+    "simple-oauth": "^0.0.1",
+    "simple-oauth2": "^4.3.0"
+  }
+}
