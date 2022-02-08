@@ -2,7 +2,6 @@
 
 The trust mediator component follows the concept of the architecture concept and demonstrates how the CSCA certificates can be used to establish a trust relationship between unknown parties. For this purpose, the mediator provides an endpoint for requesting tokens to a protected API. Normally, this token will be requested directly over an OAuth2 Token Endpoint e.g. by an authorization code flow, but this has the limitation that the requestor either must be registered as client or as resource owner for the protected resource, which is in an normaly verification scenario mostly not the case. This results from the circumtances that the Verifier of an DDCC will not be the holder (or resource owner) of an certificate or is maybe just any device of a jurisdiction which is not visible to outside parties. For instance: an device of country A Border Patrol is not necessarily known as verifier device in a health system of country B. The trust mediator solves that problem, by mediating the trust between country A and B over the used trusted certificates. 
 
-
 # Basic Concept
 
 Following the concept of the trust mediator, the component will receive a signed JWT with an X509 certificate and the signature of this certificaste in JWT format [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519). The certificate must be issued to an device which is allowed to do online verifications of DDCCs. This device is then able to create the JWT Tokens for using the trust mediator in another jurisdiction. The mediator can then deliver the necessary access credentials to receive the protected DDCC data records. Optionally the endpoint can return an token which can be used to register other parties as direct client.
@@ -76,3 +75,7 @@ POST /{URL}
 # OAuth Connection
 
 The trust mediator must be connected to the IAM system e.g. Keycloak. This will be done over registering the mediator as Client with client ID and secret or similiar. 
+
+# Configuration
+
+Set in the configuration json, the related clientIDs/clientSecrets for connecting to the keycloak. It's recommended to create a new realm for this purpose with two new clients. One for dynamic client registration and one for creating access tokens.The registration client need the role "create-client" (can be set under realm settings, select the client and then service roles). Create before an new scope for reading the ddcc e.g. "ddcc-read" and limit the two clients to this scopes. 
