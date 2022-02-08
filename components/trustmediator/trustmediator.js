@@ -4,9 +4,9 @@ const fs = require('fs');
 const jose = require('jose')
 const {X509Certificate} = require('crypto')
 
-const oauth = require('./OAuthClientCredentialFlow')
-const trusthandler = require('./TrustHandler')
-const policyhandler = require('./PolicyHandler')
+const oauth = require('./modules/OAuthClientCredentialFlow')
+const trusthandler = require('./modules/TrustHandler')
+const policyhandler = require('./modules/PolicyHandler')
 
 const port = 3000
 var configuration = null;
@@ -38,28 +38,33 @@ app.get('/token', (req, res) => {
         return res.status(400).send();
     }
 
-    let allowedToProceed = policyhandler.allowedToProceed(configuration,payload.sub,x509.fingerprint256)
+    jose.jwtVerify(token,x509.publicKey).then(function(value){
+        console.log(value);
+        
+        let allowedToProceed = policyhandler.allowedToProceed(configuration,payload.sub,x509.fingerprint256)
     
-    if(allowedToProceed) {
-
-        let cscaStore = trusthandler.getCSCAList();
-
-        if(cscaStore.length == 0) {
-            return res.status(401).send();
+        if(allowedToProceed) {
+    
+            let cscaStore = trusthandler.getCSCAList();
+    
+            if(cscaStore.length == 0) {
+                return res.status(401).send();
+            }
+    
+            let csca = new X509Certificate(Buffer.from(cscaStore[0], 'base64'))
+            let result = x509.checkIssued(csca)
+    
+            if(result) {
+                oauth.getToken(configuration,req.query.type).then(function(value){
+                     return res.status(200).send(value);
+                }).catch(function(){
+                     return res.status(401).send();
+                });
+            }
         }
-
-        let csca = new X509Certificate(Buffer.from(cscaStore[0], 'base64'))
-        let result = x509.checkIssued(csca)
-
-        if(result) {
-            oauth.getToken(configuration,req.query.type).then(function(value){
-                 return res.status(200).send(value);
-            }).catch(function(){
-                 return res.status(401).send();
-            });
-          
-        }
-    }
+    }).catch(function(){
+        return res.status(401).send();
+    })
 })
 
 app.listen(port, () => {
