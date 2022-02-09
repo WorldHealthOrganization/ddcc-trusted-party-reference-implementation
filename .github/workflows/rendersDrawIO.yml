@@ -1,8 +1,8 @@
 name: Render .drawio files
-
 on:
-  workflow_dispatch:
-    inputs: ""
+  push:
+    branches:
+    - main
 jobs:
   render_drawio:
     runs-on: ubuntu-latest
