@@ -6,4 +6,29 @@ This project shall give an best practise overview how an trusted party backend c
 
 ## Overview
 
+## Kubernetes
+
+
+## Main Components
+
+### Keycloak
+
+### Hashicorp Vault
+
+### Matchbox Server
+
+### HApi FHIR
+
+### OpenHIM
+
+### DDCC Transactions Mediator
+
+### Postgres
+
+### Mongo DB
+
+
+
+
+
 
