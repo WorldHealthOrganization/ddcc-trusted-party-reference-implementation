@@ -6,6 +6,8 @@
 For generating CSCA/DSC or wrapper certificates, the [certificate governance of the EU DCC](https://github.com/eu-digital-green-certificates/dgc-overview/blob/main/guides/certificate-governance.md) should be considered,
 because it defines already the most important PKI parameters/rules which are accepted and supported by the most CAs. Public, Private and Self Signed CAs are supported, because all of the certificates have an kind of "private" use, and must not be resolved by any browser.
 
+An example how to generate certificates can be found [here](https://github.com/eu-digital-green-certificates/dgc-participating-countries/blob/main/gateway/CertificatePreperation.md).
+
 <b>Note</b>: ICAO defines in the [9303 Part 12](https://www.icao.int/publications/Documents/9303_p12_cons_en.pdf) Document, Chapter 4.1.6.3, that the usage of Eliptic Curves requires explicit curve parameters instead of using curve names/implicit parameters.
 This deriviation can lead in some implementations to exceptions,when certificates are generated according to this specification, 
 because the CurveNames are much more common within the most frameworks (e.g. prime256).
