@@ -17,6 +17,8 @@ This project shall give an best practise overview how an trusted party backend c
 
 The [keycloak](https://github.com/keycloak/keycloak) component is a widely used IAM system within open source solutions. It's in this solution used to provide user and client management functionalities. 
 
+A installation guide can be found [here].(https://github.com/WorldHealthOrganization/ddcc-trusted-party-reference-implementation/blob/master/docs/KEYCLOAK.md)
+
 ### Hashicorp Vault
 
 The [hashicorp vault](https://github.com/hashicorp/vault) component was introduced to fullfill the following tasks: 
@@ -27,6 +29,7 @@ The [hashicorp vault](https://github.com/hashicorp/vault) component was introduc
 
 In a future version, the vault can also be enhanced by [plugins](https://www.vaultproject.io/docs/internals/plugins) to support new crypto algorithms or signing procedures which are not immediately supported by HSMs.
 
+A installation guide can be found [here].(https://github.com/WorldHealthOrganization/ddcc-trusted-party-reference-implementation/blob/master/docs/HASHICORPVAULT.md)
 
 ### Matchbox Server
 
