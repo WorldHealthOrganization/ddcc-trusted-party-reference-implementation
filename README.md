@@ -18,7 +18,7 @@ Whatever is used, it must be well considered if the issuing of covid certificate
 
 When the cluster is up and running, it must be ensured that security relevant things are not accessible for unauthorized persons from outside. Each endpoint which must be exposed to public, should be evaluated carefully for the security needs. For instance all certificate generation endpoints or management endpoints of the system, should be protected either by client certificates or other appropiate protection mechanisms. How to grant people/issuers the rights to use this endpoints depends on the local regulations, processes and health care structures. Whatever issuing process is used, the usage of those endpoints should be monitored and audited to detect fraud and misuse early. 
 
-Within the cluster, the most important point is to protect the private key material for signing certificate (also from internals). The amount of people with access to the siging infrastructure must be limited. It's recommended to split the signing/key material components out in a seperate environments to realize an organizational split. For instance in different accounts, different data centers or similiar. Need to know principles should also be respected for internal technical details or structures. 
+Within the cluster, the most important point is to protect the private key material for signing certificates (internal employees included). The amount of people with access to the siging infrastructure must be limited. It's recommended to split the signing/key material components out in a seperate environments to realize an organizational split. For instance in different accounts, different data centers or similiar. Need to know principles should also be respected for internal technical details or structures. 
 
 If possible, all components used in the cluster should be seperated in different namespaces with additional security hardening in MicroVMs(e.g. [Kata](https://katacontainers.io)), Special Container Hardening (e.g. [Scone](https://scontain.com/index.html?lang=en)) or similiar. Not each of that techniques may be compatible with your local environment, because some of them require maybe special hardware as TPM modules or Intel SGX.
 
@@ -48,17 +48,33 @@ A installation guide can be found [here](https://github.com/WorldHealthOrganizat
 
 ### Matchbox Server
 
-### HApi FHIR
+This component is used within the transaction mediator to generate DDCC. More information can be found [here](https://github.com/ahdis/matchbox)
+
+More about the installation can be found in the [docs](https://github.com/WorldHealthOrganization/ddcc-trusted-party-reference-implementation/blob/master/docs/MATCHBOX.md) section.
+
+### HAPI FHIR
+
+The [HAPI FHIR](https://hapifhir.io) server is a standard component following the HL7 FHIR standard for healthcare interoperability.
+
+More about the installation can be found in the [docs](https://github.com/WorldHealthOrganization/ddcc-trusted-party-reference-implementation/blob/master/docs/HAPIFHIR.md) section.
 
 ### OpenHIM
 
+[OpenHIM](http://openhim.org) is a middleware which shall simplify the interoperability and orchestration between disparate information systems. The components supports the dynamic registration of mediators (e.g. Transaction Mediator) or the introduction of cron jobs to handle tasks. For creating a mediator the mediator tools from [this](http://openhim.org/mediator-library) side is a good start. 
+
+More about the installation can be found in the [docs](https://github.com/WorldHealthOrganization/ddcc-trusted-party-reference-implementation/blob/master/docs/OPENHIM.md) section.
+
 ### DDCC Transactions Mediator
+
+This [mediator](https://github.com/WorldHealthOrganization/ddcc-transactions-mediator) is an add on to OpenHIM/FHIR for generating the DDCCs. 
 
 ### Postgres
 
+Postgres was introduced to provide an standard open source database for the components. The database must be installed according to the used platform (either managed or self hosted). High Availability and Backup Strategies must be choosen according the local policies and regulations.
+
 ### Mongo DB
 
-
+MongoDB is used by OpenHIM to store the data about users and transactions. The mongodb setup must be choosen according the local policies and regulations. Mongo DB offers the possibility to scale out the database by more secondaries or shards. Which setup is the ideal one, depends on the OpenHim Load and availability needs. The usage of MongoDB Replica Sets is a good choice for read scale outs and should be used if the read performance must be increased. For very big datasets and write operations the sharding operations mode should be considered. 
 
 ## Out of Scope
 
