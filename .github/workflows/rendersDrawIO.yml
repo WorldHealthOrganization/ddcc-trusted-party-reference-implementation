@@ -13,15 +13,12 @@ jobs:
     - name: Render .drawio files
       uses: docker://ghcr.io/racklet/render-drawio-action:v1
       with: # Showcasing the default values here
-        formats: 'png'
+        formats: '.png'
         sub-dirs: './docs'
         skip-dirs: '.git'
         # files: '' # unset, specify `dest-file=src-file` mappings here
         log-level: 'info'
       id: render
-    - name: List the rendered files
-      working-directory: ./docs/DrawIO
-      run: 'ls -l ${{ steps.render.outputs.rendered-files }}'
     - name: Commit the rendered files
       uses: EndBug/add-and-commit@v7
       with:
