@@ -2,7 +2,7 @@ name: Render .drawio files
 on:
   push:
     branches:
-    - main
+    - master
 jobs:
   render_drawio:
     runs-on: ubuntu-latest
