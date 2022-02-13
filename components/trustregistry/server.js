@@ -1,7 +1,7 @@
 const express = require('express')
 const trusthandler = require('./modules/TrustHandler')
 const app = express()
-const port = 3000
+const port = 8080
 
 app.get('/dcc', (req, res) => {
   return res.send(trusthandler.TRUST_REGISTRY["EUDCC"]);
