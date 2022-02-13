@@ -24,6 +24,7 @@ If possible, all components used in the cluster should be seperated in different
 
 Check in every case the default [security advices](https://kubernetes.io/docs/tasks/administer-cluster/securing-a-cluster/).
 
+Further security advices are collected [here](https://github.com/WorldHealthOrganization/ddcc-trusted-party-reference-implementation/blob/master/docs/SECURITYGUIDE.md).
 
 
 ## Main Components
