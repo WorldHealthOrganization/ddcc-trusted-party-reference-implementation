@@ -13,8 +13,8 @@ jobs:
     - name: Render .drawio files
       uses: docker://ghcr.io/racklet/render-drawio-action:v1
       with: # Showcasing the default values here
-        formats: '.png'
-        sub-dirs: './docs'
+        formats: 'png'
+        sub-dirs: 'docs/DrawIO'
         skip-dirs: '.git'
         # files: '' # unset, specify `dest-file=src-file` mappings here
         log-level: 'info'
