@@ -96,6 +96,31 @@ The vault can be tight to an ingress for the web ui to become exposed.
 
 #### Links:
 [vault installation](https://www.vaultproject.io/docs/platform/k8s/helm/run)
+# Administration
+## Secrets
+Secrets are stored in vault as key/value (k/v) stores.
+## Vault agent injection
+A special feature is the vault agent injection. 
+The vault acts as a sidecar to the application container, providing it with initialzation values. Therefore it is also called init container.  
+After injecting the initialization values the init container finishes, i. e. it is in state stopped, which is normal and indicates a successful run.
+The injection can be achieved by annotations to the deployment of the application container. This may look like: 
+```yaml
+annotations:
+  vault.hashicorp.com/agent-init-first: "true" # init container has to finish before application container runs
+  vault.hashicorp.com/agent-inject: "true" # activates the injection, false=deactivates it
+  vault.hashicorp.com/agent-pre-populate-only: "true"
+  vault.hashicorp.com/role: fhir-postgres-db # the role in vault that is configured for the secrets that should be accessed
+  vault.hashicorp.com/agent-inject-secret-postgres: postgres-db/data/database #path of the secret in vault
+  vault.hashicorp.com/agent-inject-template-postgres: |
+        {{- with secret "postgres-db/data/database" -}}
+            export POSTGRES_DB={{ .Data.data.POSTGRES_DB }}
+            export POSTGRES_USER={{ .Data.data.POSTGRES_USER }}
+            export POSTGRES_PASSWORD={{ .Data.data.POSTGRES_PASSWORD }}
+        {{- end -}}
+
+ # template for the injection - the k/v pairs under the path are mapped to a volume mount /vault/secret/postgres in above case (form vault.hashicorp.com/agent-inject-secret-<mountpoint>)
+```
+
 # Remarks  
 By default after installation the certificate validity is reduced to 30 days, which is not useful in productive environments.
 To set a reasonable validity time set it via the following command.
