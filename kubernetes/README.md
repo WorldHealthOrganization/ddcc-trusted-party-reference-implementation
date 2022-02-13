@@ -38,3 +38,5 @@ When an ingress route is hosted, which shall deliver content to an webiste, it's
 
 The vault is able to [inject secrets](https://www.vaultproject.io/docs/platform/k8s/injector) directly into a starting pod. This can be configured over annotations within the pod/template. The injector can create files directly. For environment variables there must an additional command added to set them into the pod after injection. 
 
+If the injection is used, ensure that the correct role ist set and that the role has the correct rights for the requests secret within the vault. Otherwise the vault injector will respond with permission denied. 
+
