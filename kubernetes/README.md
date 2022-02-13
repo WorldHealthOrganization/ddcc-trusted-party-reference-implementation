@@ -6,6 +6,8 @@
 
 The choice of an [ingress controller](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/) depends on the necessary functionality. Each of the ingress controllers deliver more or less basic functionality, but in detail the differ a lot. In the created cluster the nginx ingress controller was used, because it offers a set of features which fit perfectly to the use cases. For instance, client-auth, CORS support and others.  
 
+For seperation/HA or traffic purposes it may be necessary to install [multiple purposes](https://docs.nginx.com/nginx-ingress-controller/installation/running-multiple-ingress-controllers/)
+
 ## Annotations
 
 To enable the ingress controller features, annotations must be set within the ingress route. For the nginx controller the annotations can be found [here](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/). 
