@@ -12,7 +12,7 @@ To enable the ingress controller features, annotations must be set within the in
 
 ## DNS Hosts
 
-To integrate later on TLS certificates, each ingress route should be set on one or more DNS hosts adressed. This can be created within the available DNS zones as alias for the Public IP adress or as seperate DNS entry for one domain. Is an custom DNS name used, it may be required to add the Plattform DNS servers to the domain name resolution. 
+To integrate later on TLS certificates, each ingress route should be set on one or more DNS hosts adresses. This can be created within the available DNS zones as alias for the Public IP adress or as seperate DNS entry for one domain. Is an custom DNS name used, it may be required to add the Plattform DNS servers to the domain name resolution. 
 
 ## Cert Manager
 
