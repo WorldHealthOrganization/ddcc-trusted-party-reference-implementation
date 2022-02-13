@@ -17,7 +17,7 @@ jobs:
         sub-dirs: 'docs/DrawIO'
         skip-dirs: '.git'
         # files: '' # unset, specify `dest-file=src-file` mappings here
-        log-level: 'info'
+        log-level: 'debug'
       id: render
     - name: Commit the rendered files
       uses: EndBug/add-and-commit@v7
