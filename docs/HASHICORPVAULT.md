@@ -89,11 +89,19 @@ HA Enabled      false
 
 In the end the **seal** state changes to false to indicate successful initation.
 
-
+Hashicorp vault comes with an ui to ease configuration tasks. UI is enabled by default, but can be disabled to harden the installation.
+The UI as well as the API can be accessed via port 8200 if default installation was used and port was not changed during helm installation.
+The vault can be tight to an ingress for the web ui to become exposed.  
 
 
 #### Links:
 [vault installation](https://www.vaultproject.io/docs/platform/k8s/helm/run)
 # Remarks  
+By default after installation the certificate validity is reduced to 30 days, which is not useful in productive environments.
+To set a reasonable validity time set it via the following command.
+```bash
+ kubectl exec -ti vault-0 --  vault secrets tune -max-lease-ttl=8760h pki
+```
+which will the maximum certificate validity to one year.
 
 # Considerations
