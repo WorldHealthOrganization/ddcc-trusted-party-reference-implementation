@@ -20,7 +20,7 @@ When the cluster is up and running, it must be ensured that security relevant th
 
 Within the cluster, the most important point is to protect the private key material for signing certificates (internal employees included). The amount of people with access to the siging infrastructure must be limited. It's recommended to split the signing/key material components out in a seperate environments to realize an organizational split. For instance in different accounts, different data centers or similiar. Need to know principles should also be respected for internal technical details or structures. 
 
-If possible, all components used in the cluster should be seperated in different namespaces with additional security hardening in MicroVMs(e.g. [Kata](https://katacontainers.io)), Special Container Hardening (e.g. [Scone](https://scontain.com/index.html?lang=en)) or similiar. Not each of that techniques may be compatible with your local environment, because some of them require maybe special hardware as TPM modules or Intel SGX.
+If possible, all components used in the cluster should be seperated in different namespaces with additional security hardening in MicroVMs(e.g. [Kata](https://katacontainers.io)), Special Container Hardening (e.g. [Scone](https://scontain.com/index.html?lang=en)) or similiar. Not each of that techniques may be compatible with your local environment, because some of them require maybe special hardware as TPM modules or Intel SGX supporting Processors.
 
 Check in every case the default [security advices](https://kubernetes.io/docs/tasks/administer-cluster/securing-a-cluster/).
 
