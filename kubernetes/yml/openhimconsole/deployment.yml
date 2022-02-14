@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: openhim-console
+  name: openhim-console
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: openhim-console
+  template:
+    metadata:
+      labels:
+        app: openhim-console
+    spec:
+      containers:
+      - image: jembi/openhim-console
+        imagePullPolicy: IfNotPresent
+        name: openhim-console
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html/config/default.json
+          name: config-volume
+          subPath: default.json
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: openhim-console-config
+        name: config-volume

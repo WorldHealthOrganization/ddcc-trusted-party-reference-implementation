@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: openhim-mongo
+  name: openhim-mongo
+  namespace: default
+spec:
+  ports:
+  - name: "27017"
+    port: 27017
+    protocol: TCP
+    targetPort: 27017
+  selector:
+    app: openhim-mongo
+  type: ClusterIP

@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/ingress.class: addon-http-application-routing
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+  name: postgres-admin-ui-ingress
+  namespace: default
+spec:
+  rules:
+  - host: pgadmin.{{ .Domain }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: postgres-admin-ui
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - pgadmin.{{ .Domain }}
+    secretName: pgadmin-tls-ingress

@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  generation: 2
+  labels:
+    app: openhim-mongo
+  name: openhim-mongo
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: openhim-mongo
+  template:
+    metadata:
+      labels:
+        app: openhim-mongo
+    spec:
+      containers:
+      - image: mongo:3.4
+        imagePullPolicy: IfNotPresent
+        name: openhim-mongo
+        ports:
+        - containerPort: 27017
+          protocol: TCP

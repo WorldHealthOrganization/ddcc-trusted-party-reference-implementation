@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: postgres-admin-ui
+    app.kubernetes.io/component: postgres-admin-ui
+    app.kubernetes.io/instance: postgres-admin-ui
+    app.kubernetes.io/part-of: postgres-admin-ui
+  name: postgres-admin-ui
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: postgres-admin-ui
+  template:
+    metadata:
+      annotations:
+        deployment.kubernetes.io/revision: "1"
+        vault.hashicorp.com/agent-init-first: "true"
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/agent-inject-secret-pgadmin: pgadmin/data/admin
+        vault.hashicorp.com/agent-inject-template-pgadmin: |
+          {{- with secret "pgadmin/data/admin" -}}
+            export PGADMIN_DEFAULT_EMAIL={{ .Data.data.PGADMIN_DEFAULT_EMAIL }}
+            export PGADMIN_DEFAULT_PASSWORD={{ .Data.data.PGADMIN_DEFAULT_PASSWORD }}
+            {{- end -}}
+        vault.hashicorp.com/agent-pre-populate-only: "true"
+        vault.hashicorp.com/role: pgadmin
+      labels:
+        app: postgres-admin-ui
+    spec:
+      containers:
+      - args:
+        - -c
+        - . /vault/secrets/pgadmin && . /entrypoint.sh
+        command:
+        - /bin/sh
+        image: dpage/pgadmin4
+        imagePullPolicy: IfNotPresent
+        name: postgres-admin-ui
+        ports:
+        - containerPort: 80
+          protocol: TCP
+      serviceAccount: pgadmin
+      serviceAccountName: pgadmin
