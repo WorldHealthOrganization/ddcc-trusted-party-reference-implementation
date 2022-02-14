@@ -1,5 +1,7 @@
 # Introduction
 
+This readme gives an overview what considerations must be done during the setup of a kubernetes cluster with the selected components.
+
 # Ingress Controller
 
 ## Overview
@@ -41,4 +43,10 @@ When an ingress route is hosted, which shall deliver content to an webiste, it's
 The vault is able to [inject secrets](https://www.vaultproject.io/docs/platform/k8s/injector) directly into a starting pod. This can be configured over annotations within the pod/template. The injector can create files directly. For environment variables there must an additional command added to set them into the pod after injection. 
 
 If the injection is used, ensure that the correct role ist set and that the role has the correct rights for the requests secret within the vault. Otherwise the vault injector will respond with permission denied. 
+
+# Vault Secrets
+
+To use the secrets in the vault, several steps are required to make the secrets accessible from outside. First of all, the kubernetes authentication method must be enabled. Follow the instructions [here](https://www.vaultproject.io/docs/auth/kubernetes) precisly. Use the command line within the cluster, because the vault UI don't provide all necessary parameters. 
+
+After the setup of the kubernetes auth, generate simply for all containers, which needs an injection or access to a secret, a service account and add it via serviceaccount attribute to the yml. Within the vault, you can generate an secret engine (e.g. k/v) and a policy for it. Consider that the path for the polices is defined as {engineName}/data/{secretname}. For instance postgresdb/data/fhir. After creating this in the vault, the access can be defined. Create fur this purpose a role within the kubernetes auth, which matches precisly to the role defined in the injector annotation. Declare within the role the default namespace, the used service account and the used policy. The injector injects then the file with the secrets to the path /vault/secrets/{choosen name}.
 
