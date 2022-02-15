@@ -121,6 +121,12 @@ annotations:
  # template for the injection - the k/v pairs under the path are mapped to a volume mount /vault/secret/postgres in above case (form vault.hashicorp.com/agent-inject-secret-<mountpoint>)
 ```
 
+To bring the injection to run, you must respect the following steps: 
+
+1) Create an Role Kubernetes Auth Engine
+2) Create an Access Policy which gives minimum read access to the k/v engine path (e.g. postgres/data/fhir)
+3) Link the service account and the policy together in the kubernetes auth role to grant the access to the secrets. 
+
 # Remarks  
 By default after installation the certificate validity is reduced to 30 days, which is not useful in productive environments.
 To set a reasonable validity time set it via the following command.

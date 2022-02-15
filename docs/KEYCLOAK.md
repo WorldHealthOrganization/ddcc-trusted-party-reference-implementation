@@ -8,7 +8,7 @@ It can also be used to manage the authentification to the vault system, which of
 Keycloak docker containers are provided by quay.io in the official docker registry. So no pull secret is necessary for accessing them.  
 They can simply installed with the keycloak deploymenmt yaml file in the yaml subdirectory of this repository. 
 ``` bash
-kubectl apply -f keycloak.yml
+kubectl apply -f keycloak/deployment.yml
 ``` 
 This assumes that the postgres database is already installed before.  
 
