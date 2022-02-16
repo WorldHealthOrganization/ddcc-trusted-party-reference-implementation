@@ -53,4 +53,7 @@ If this option is activated, it may be necessary to connect to this endpoints vi
 
 <b>Note</b> If supported, the client authentication can be replaced by other authentication methods e.g. OAuth2 or SSI. 
 
+## Network Policies
+
+If applicable, seperate the different applications by [network policies](https://kubernetes.io/docs/concepts/services-networking/network-policies/), depending on your operations model. 
 
