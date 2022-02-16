@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: openhim-core
+  name: openhim-core
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: openhim-core
+  template:
+    metadata:
+      labels:
+        app: openhim-core
+    spec:
+      containers:
+      - env:
+        - name: mongo_atnaUrl
+          value: mongodb://openhim-mongo.default.svc.cluster.local:27017/openhim
+        - name: mongo_url
+          value: mongodb://openhim-mongo.default.svc.cluster.local:27017/openhim
+        image: jembi/openhim-core
+        imagePullPolicy: IfNotPresent
+        name: openhim-core
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 5000
+          protocol: TCP
+        - containerPort: 5001
+          protocol: TCP
+        - containerPort: 5050
+          protocol: TCP
+        - containerPort: 5051
+          protocol: TCP
+        - containerPort: 5052
+          protocol: TCP
+        - containerPort: 7788
+          protocol: TCP

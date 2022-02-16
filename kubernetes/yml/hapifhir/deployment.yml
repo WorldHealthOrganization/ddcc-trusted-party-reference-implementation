@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    package: core
+  name: hapi-fhir-server
+  namespace: default
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      component: hapi-fhir-server
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        deployment.kubernetes.io/revision: "1"
+        vault.hashicorp.com/agent-init-first: "true"
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/agent-inject-secret-postgres: postgres-db/data/fhir
+        vault.hashicorp.com/agent-inject-template-postgres: |
+          {{- with secret "postgres-db/data/fhir" -}}
+            export POSTGRES_DB={{ .Data.data.POSTGRES_DB }}
+            export SPRING_DATASOURCE_USERNAME={{ .Data.data.POSTGRES_USER }}
+            export SPRING_DATASOURCE_PASSWORD={{ .Data.data.POSTGRES_PASSWORD }}
+            export SPRING_DATASOURCE_URL=jdbc:postgresql://${POSTGRES_FHIR_SERVICE_HOST}:${POSTGRES_FHIR_SERVICE_PORT}/{{ .Data.data.POSTGRESQL_DATABASE }}
+            {{- end -}}
+        vault.hashicorp.com/agent-pre-populate-only: "true"
+        vault.hashicorp.com/role: fhir-server
+      creationTimestamp: null
+      labels:
+        component: hapi-fhir-server
+    spec:
+      containers:
+      - args:
+        - -c
+        - . /vault/secrets/postgres && catalina.sh run
+        command:
+        - /bin/sh
+        env:
+        - name: SPRING_DATASOURCE_DRIVERCLASSNAME
+          value: org.postgresql.Driver
+        - name: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
+          value: org.hibernate.dialect.PostgreSQLDialect
+        - name: HAPI_FHIR_ALLOW_EXTERNAL_REFERENCES
+          value: "true"
+        image: hapiproject/hapi:v5.2.1
+        imagePullPolicy: IfNotPresent
+        name: hapi-fhir-server
+      serviceAccount: hapi-fhir-server
+      serviceAccountName: hapi-fhir-server

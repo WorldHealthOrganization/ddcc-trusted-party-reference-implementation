@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+      kubernetes.io/ingress.class: addon-http-application-routing
+      nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    name: openhimconsole-ingress
+    namespace: default
+  spec:
+    rules:
+    - host: openhimconsole.{{ .Domain }}
+      http:
+        paths:
+        - backend:
+            service:
+              name: openhim-console
+              port:
+                number: 9000
+          path: /
+          pathType: Prefix
+    tls:
+    - hosts:
+      - openhimconsole.{{ .Domain }}
+      secretName: openhim-tls-secret

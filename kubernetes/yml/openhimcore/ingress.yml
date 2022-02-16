@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/ingress.class: addon-http-application-routing
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/cors-allow-headers: auth-salt,auth-token,auth-ts,auth-username
+    nginx.ingress.kubernetes.io/cors-allow-methods: GET,HEAD,PUT,POST,DELETE
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+  name: openhimingress
+  namespace: default
+spec:
+  rules:
+  - host: openhim.{{ .Domain }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: openhim-core
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
+      - backend:
+          service:
+            name: openhim-core
+            port:
+              number: 8080
+        path: /authenticate/.*
+        pathType: Prefix
+  tls:
+  - hosts:
+    - openhim.{{ .Domain }}
+    secretName: openhim-tls-ingress

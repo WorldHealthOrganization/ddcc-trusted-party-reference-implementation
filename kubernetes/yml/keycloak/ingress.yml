@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/ingress.class: addon-http-application-routing
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+  name: keycloakingress
+  namespace: default
+spec:
+  rules:
+  - host: keycloak.{{ .Domain }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: keycloak-pg
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - keycloak.{{ .Domain }}
+    secretName: keycloak-tls-secret
