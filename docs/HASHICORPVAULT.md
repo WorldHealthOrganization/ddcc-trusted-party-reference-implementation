@@ -36,7 +36,7 @@ Unseal Key 5: vYt9bxLr0+OzJ8m7c7cNMFj7nvdLljj0xWRbpLezFAI9
 
 Initial Root Token: s.zJNwZlRrqISjyBHFMiEca6GF
 ```
-Be sure to note that unseal keys an the root key and store it in a secret place.  
+Be sure to note these unseal keys an the root key and store it in a secret place.  
 The initiation process can be done only once and 3 of these unseal keys must be provided on every restart of the vault system.  
 issuing 
 ```bash
@@ -87,7 +87,7 @@ Cluster ID      e3ba927c-1dab-5b8c-b042-9aa119e7b41b
 HA Enabled      false
 ```
 
-In the end the **seal** state changes to false to indicate successful initation.
+In the end the **seal** state changes to **false** to indicate successful initation.
 
 Hashicorp vault comes with an ui to ease configuration tasks. UI is enabled by default, but can be disabled to harden the installation.
 The UI as well as the API can be accessed via port 8200 if default installation was used and port was not changed during helm installation.
@@ -123,7 +123,7 @@ annotations:
 
 To bring the injection to run, you must respect the following steps: 
 
-1) Create an Role Kubernetes Auth Engine
+1) Create a Role Kubernetes Auth Engine
 2) Create an Access Policy which gives minimum read access to the k/v engine path (e.g. postgres/data/fhir)
 3) Link the service account and the policy together in the kubernetes auth role to grant the access to the secrets. 
 
