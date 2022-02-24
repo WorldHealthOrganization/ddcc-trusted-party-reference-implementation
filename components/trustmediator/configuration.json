@@ -1,0 +1,19 @@
+{
+    "updateInterval":1000,  
+    "cscaEndpoint":"",
+    "policyEndpoint":"",
+    "access":{
+        "scope":"ddcc-read",
+        "clientId":"ChangeMe",
+        "clientSecret":"ChangeMe",
+        "tokenHost":"http://{KeyCloakUrl}/auth/",
+        "tokenPath":"realms/{Realm}/protocol/openid-connect/token"
+    },
+    "register":{
+        "scope":"ddcc-read",
+        "clientId":"ChangeMe",
+        "clientSecret":"ChangeMe",
+        "tokenHost":"http://{KeyCloakURL}/auth/",
+        "tokenPath":"realms/{Realm}/protocol/openid-connect/token"
+    } 
+}
