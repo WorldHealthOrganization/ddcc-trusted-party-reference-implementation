@@ -1,19 +1,61 @@
 var TRUST_REGISTRY = {}
-const fetch = require( 'cross-fetch')
+var last_updated = Date.now();
+const { Console } = require('console');
+const fs = require('fs');
+const https = require('https')
+const env = require('dotenv').config();
 
 module.exports.updateRegistry = async function (){
 
-    //TODO Replace by GW Connection
-    try {
-        const res = await fetch('https://raw.githubusercontent.com/Path-Check/trust-registry/main/registry.json', {method: 'GET', mode: 'no-cors'})
-        const data = await res.text()
-        this.TRUST_REGISTRY = JSON.parse(data);
-      } catch (e) {
-        console.log(e);
-      }  
+      //DEMO which is not optimized for PROD.
+
+      const req=  https.request(
+        {
+          hostname: process.env.HOST,
+          port: 443,
+          path: '/trustList/certificate?group=DSC',
+          method: 'GET',
+          cert: fs.readFileSync(process.env.AUTHCERTPATH),
+          key: fs.readFileSync(process.env.AUTHKEYCERTPATH),
+          ca: fs.readFileSync(process.env.CACERTPATH)     
+        },
+        res => {
+                  let body = "";
+
+                  res.on("data", (chunk) => {
+                      body += chunk;
+                  });
+                  res.on('end', function(data) {        
+                              try {
+                                let json = JSON.parse(body);
+                                json.forEach(item=>extractAndTransform(item))
+                            } catch (error) {
+                                console.error(error.message);
+                            };                                     }
+                       );
+               })  
+      req.end();
 }
 
-module.exports.TRUST_REGISTRY = this.TRUST_REGISTRY;
+function extractAndTransform(entry) {
+    let json = {}
+
+    if (entry.properties != null) {
+      json = entry.properties
+    } 
+
+    if(entry.domain == 'DCC') {
+      entry.domain = 'EUDCC'
+    }
+
+    json["didDocument"] = entry.certificate;
+
+    TRUST_REGISTRY[entry.domain] = TRUST_REGISTRY[entry.domain] ?? {}
+    
+    TRUST_REGISTRY[entry.domain][entry.kid]=json;
+};
+
+module.exports.TRUST_REGISTRY = TRUST_REGISTRY;
 
 module.exports.initialize = function (configuration){
     
