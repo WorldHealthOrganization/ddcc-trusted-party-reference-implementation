@@ -13,7 +13,7 @@ module.exports.updateRegistry = async function (){
         {
           hostname: process.env.HOST,
           port: 443,
-          path: '/trustList/certificate?group=DSC',
+          path: '/trustList/certificate?group=DSC&withFederation=true',
           method: 'GET',
           cert: fs.readFileSync(process.env.AUTHCERTPATH),
           key: fs.readFileSync(process.env.AUTHKEYCERTPATH),
