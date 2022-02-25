@@ -6,6 +6,10 @@ This project shall give an best practise overview how an trusted party backend c
 
 ## Overview
 
+<p align="center">
+  <img src="./docs/images/ClusterOverview.png" >
+</p>
+
 ## Kubernetes
 
 The cluster can be set up in any kubernetes environment like k8s, k3s or [others](https://kubernetes.io/de/docs/setup/). From platform to platform can be deriviations which must be considered during the adaptation e.g. with the available ingress controllers, api gateways etc. The demo cluster remarks can be found in this [Readme](https://github.com/WorldHealthOrganization/ddcc-trusted-party-reference-implementation/blob/master/kubernetes/README.md)
