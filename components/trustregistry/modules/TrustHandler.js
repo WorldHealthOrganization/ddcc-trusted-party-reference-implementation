@@ -12,13 +12,13 @@ module.exports.updateRegistry = async function (){
 
       const req=  https.request(
         {
-          hostname: 'ddcc-gateway.861b530c4a22413cb791.westeurope.aksapp.io',
+          hostname: process.env.HOST,
           port: 443,
           path: '/trustList/certificate?group=DSC&withFederation=true',
           method: 'GET',
-          cert: fs.readFileSync("./modules/cert.pem"),
-          key: fs.readFileSync("./modules/priv.pem"),
-          ca: fs.readFileSync("./modules/ca.cer")      
+          cert: fs.readFileSync(process.env.AUTHCERTPATH),
+          key: fs.readFileSync(process.env.AUTHKEYCERTPATH),
+          ca: fs.readFileSync(process.env.CACERTPATH)  
         },
         res => {
                   let body = "";
