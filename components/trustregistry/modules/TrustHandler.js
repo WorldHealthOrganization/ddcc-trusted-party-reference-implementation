@@ -52,7 +52,12 @@ function extractAndTransform(entry) {
     json["validFromDT"] = cert.validFrom
     json["validUntilDT"] = cert.validTo
     json["credentialType"] = []
-    json["status"] = "active"
+    
+    if(cert.validTo>Date.now()) {
+      json["status"] = "current"     
+    } else {
+      json["status"] = "expired"     
+    }
 
     if (entry.properties != null) {
       json = entry.properties
