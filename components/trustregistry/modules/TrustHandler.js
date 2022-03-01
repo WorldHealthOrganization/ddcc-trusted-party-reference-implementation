@@ -12,13 +12,13 @@ module.exports.updateRegistry = async function (){
 
       const req=  https.request(
         {
-          hostname: process.env.HOST,
+          hostname: 'ddcc-gateway.861b530c4a22413cb791.westeurope.aksapp.io',
           port: 443,
           path: '/trustList/certificate?group=DSC&withFederation=true',
           method: 'GET',
-          cert: fs.readFileSync(process.env.AUTHCERTPATH),
-          key: fs.readFileSync(process.env.AUTHKEYCERTPATH),
-          ca: fs.readFileSync(process.env.CACERTPATH)     
+          cert: fs.readFileSync("./modules/cert.pem"),
+          key: fs.readFileSync("./modules/priv.pem"),
+          ca: fs.readFileSync("./modules/ca.cer")      
         },
         res => {
                   let body = "";
@@ -41,7 +41,9 @@ module.exports.updateRegistry = async function (){
 function extractAndTransform(entry) {
   try {
 
-  
+    if(entry.group == 'UPLOAD') return;
+    if(entry.group=='CSCA') return;
+
     let json = {}
 
     let cert = Certificate.fromPEM('-----BEGIN CERTIFICATE-----\n'+entry.certificate+'\n-----END CERTIFICATE-----')
@@ -83,7 +85,7 @@ function extractAndTransform(entry) {
     if(entry.domain == 'ICAO') {
     }
 
-    if( entry.domain = 'CRED') {
+    if( entry.domain == 'CRED') {
 
     }
 
@@ -107,5 +109,5 @@ module.exports.TRUST_REGISTRY = TRUST_REGISTRY;
 module.exports.initialize = function (configuration){
     
     this.updateRegistry()
-    setInterval(() => this.updateRegistry(),30000);
+    setInterval(() => this.updateRegistry(),300000);
 }
