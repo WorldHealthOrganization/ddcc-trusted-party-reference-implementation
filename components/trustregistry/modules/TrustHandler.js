@@ -39,6 +39,9 @@ module.exports.updateRegistry = async function (){
 }
 
 function extractAndTransform(entry) {
+  try {
+
+  
     let json = {}
 
     let cert = Certificate.fromPEM('-----BEGIN CERTIFICATE-----\n'+entry.certificate+'\n-----END CERTIFICATE-----')
@@ -93,6 +96,10 @@ function extractAndTransform(entry) {
     TRUST_REGISTRY[entry.domain] = TRUST_REGISTRY[entry.domain] ?? {}
     
     TRUST_REGISTRY[entry.domain][entry.kid]=json;
+  }
+  catch(e) {
+    console.log(e)
+  }
 };
 
 module.exports.TRUST_REGISTRY = TRUST_REGISTRY;
