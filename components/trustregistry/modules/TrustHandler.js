@@ -4,6 +4,7 @@ const { Console } = require('console');
 const fs = require('fs');
 const https = require('https')
 const env = require('dotenv').config();
+const { Certificate, PrivateKey } = require('@fidm/x509')
 
 module.exports.updateRegistry = async function (){
 
@@ -40,15 +41,54 @@ module.exports.updateRegistry = async function (){
 function extractAndTransform(entry) {
     let json = {}
 
+    let cert = Certificate.fromPEM('-----BEGIN CERTIFICATE-----\n'+entry.certificate+'\n-----END CERTIFICATE-----')
+ 
+    json["didDocument"] = cert.publicKey.toPEM()
+    json["validFromDT"] = cert.validFrom
+    json["validUntilDT"] = cert.validTo
+    json["credentialType"] = []
+    json["status"] = "active"
+
     if (entry.properties != null) {
       json = entry.properties
     } 
 
-    if(entry.domain == 'DCC') {
-      entry.domain = 'EUDCC'
+    if(entry.domain == 'DIVOC'){
+
     }
 
-    json["didDocument"] = entry.certificate;
+    if(entry.domain == 'DCC') {
+      entry.domain = 'EUDCC'
+
+      if(cert.getExtension('extKeyUsage','1.3.6.1.4.1.1847.2021.1.1')) {
+        json["credentialType"].push('t')
+      }
+    
+      if(cert.getExtension('extKeyUsage','1.3.6.1.4.1.1847.2021.1.2')) {
+        json["credentialType"].push('v')
+      }
+
+      if(cert.getExtension('extKeyUsage','1.3.6.1.4.1.1847.2021.1.3')) {
+        json["credentialType"].push('r')
+      }
+
+      if(json["credentialType"].length == 0) {
+        json["credentialType"] = ['t','v','r']
+      }
+    }
+
+    if(entry.domain == 'ICAO') {
+    }
+
+    if( entry.domain = 'CRED') {
+
+    }
+
+    if(entry.domain == 'SmartHealthCards') {
+      entry.domain = 'SHC'
+    }
+
+    json["didDocument"] =  json["didDocument"].replace("-----BEGIN PUBLIC KEY-----\n","").replace("\n-----END PUBLIC KEY-----","").replaceAll("\n","")
 
     TRUST_REGISTRY[entry.domain] = TRUST_REGISTRY[entry.domain] ?? {}
     
