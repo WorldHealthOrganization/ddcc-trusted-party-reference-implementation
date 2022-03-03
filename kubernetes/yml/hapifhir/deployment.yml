@@ -47,7 +47,7 @@ spec:
           value: org.hibernate.dialect.PostgreSQLDialect
         - name: HAPI_FHIR_ALLOW_EXTERNAL_REFERENCES
           value: "true"
-        image: hapiproject/hapi:v5.2.1
+        image: hapiproject/hapi:v5.4.1
         imagePullPolicy: IfNotPresent
         name: hapi-fhir-server
       serviceAccount: hapi-fhir-server
