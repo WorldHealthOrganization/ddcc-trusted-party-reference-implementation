@@ -37,6 +37,13 @@ spec:
                number: 8080
         path: /clients/.*
         pathType: Prefix
+      - backend:
+           service:
+              name: openhim-core
+              port:
+                number: 5000
+        path: /ddcc/submitHealthEvent
+        pathType: Prefix         
   tls:
   - hosts:
     - openhim.{{ .Domain }}
