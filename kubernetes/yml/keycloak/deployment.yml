@@ -1,51 +1,71 @@
-apiVersion: apps/v1
 kind: Deployment
+apiVersion: apps/v1
 metadata:
-  labels:
-    app: postgres-kc
-  name: postgres-kc
+  name: keycloak-pg
   namespace: default
+  labels:
+    app: keycloak-pg
 spec:
-  progressDeadlineSeconds: 600
   replicas: 1
-  revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: postgres-kc
+      app: keycloak-pg
   template:
     metadata:
+      labels:
+        app: keycloak-pg
       annotations:
-        deployment.kubernetes.io/revision: "1"
-        vault.hashicorp.com/agent-init-first: "true"
-        vault.hashicorp.com/agent-inject: "true"
+        deployment.kubernetes.io/revision: '1'
+        vault.hashicorp.com/agent-init-first: 'true'
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/agent-inject-secret-keycloak: keycloak/data/admin
         vault.hashicorp.com/agent-inject-secret-postgres: postgres-db/data/keycloak
+        vault.hashicorp.com/agent-inject-template-keycloak: |
+          {{- with secret "keycloak/data/admin" -}}
+              export KEYCLOAK_USER={{ .Data.data.KEYCLOAK_USER }}
+              export KEYCLOAK_PASSWORD={{ .Data.data.KEYCLOAK_PASSWORD }}
+           export DB_ADDR=${POSTGRES_KC_PORT_5432_TCP_ADDR}
+           {{- end -}}
         vault.hashicorp.com/agent-inject-template-postgres: |
           {{- with secret "postgres-db/data/keycloak" -}}
-              export POSTGRES_DB={{ .Data.data.POSTGRES_DB }}
-              export POSTGRES_USER={{ .Data.data.POSTGRES_USER }}
-              export POSTGRES_PASSWORD={{ .Data.data.POSTGRES_PASSWORD }}
-            {{- end -}}
-        vault.hashicorp.com/agent-pre-populate-only: "true"
-        vault.hashicorp.com/role: keycloak-postgresdb
-      creationTimestamp: null
-      labels:
-        app: postgres-kc
+              export DB_DATABASE={{ .Data.data.POSTGRES_DB }}
+              export DB_USER={{ .Data.data.POSTGRES_USER }}
+              export DB_PASSWORD={{ .Data.data.POSTGRES_PASSWORD }}
+           export DB_PORT={{ .Data.data.POSTGRESQL_SERVICE_PORT }}
+           {{- end -}}
+        vault.hashicorp.com/agent-pre-populate-only: 'true'
+        vault.hashicorp.com/role: keycloak
     spec:
       containers:
-      - args:
-        - -c
-        - . /vault/secrets/postgres && /usr/local/bin/docker-entrypoint.sh postgres
-        command:
-        - /bin/sh
-        env:
-        - name: PROXY_ADDRESS_FORWARDING
-          value: "true"
-        image: postgres:latest
-        imagePullPolicy: IfNotPresent
-        name: postgres-kc
-        ports:
-        - containerPort: 5432
-          name: postgres-kc
-          protocol: TCP
-      serviceAccount: keycloak-postgresdb
-      serviceAccountName: keycloak-postgresdb
+        - name: keycloak-pg
+          image: quay.io/keycloak/keycloak:16.1.0
+          command:
+            - /bin/sh
+          args:
+            - '-c'
+            - >-
+              . /vault/secrets/postgres && . /vault/secrets/keycloak && .
+              /opt/jboss/tools/docker-entrypoint.sh
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: PROXY_ADDRESS_FORWARDING
+              value: 'true'
+            - name: DB_VENDOR
+              value: postgres
+          resources: {}
+          readinessProbe:
+            httpGet:
+              path: /auth/realms/master
+              port: 8080
+              scheme: HTTP
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      serviceAccountName: keycloak
+      serviceAccount: keycloak
